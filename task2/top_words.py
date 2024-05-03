@@ -44,12 +44,11 @@ async def map_reduce(text, search_words=None):
         if search_words:
             words = [word for word in words if word in search_words]
 
+        # Using asyncio.gather for async using map_function
         mapped_values = await asyncio.gather(*[map_function(word) for word in words])
 
         shuffled_values = shuffle_function(mapped_values)
-
         reduced_values = await asyncio.gather(*[reduce_function(key_values) for key_values in shuffled_values])
-
         return dict(reduced_values)
     else:
         return None
